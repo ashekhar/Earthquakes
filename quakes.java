@@ -82,7 +82,7 @@ class EarthquakeMagComparator<T1,T2 extends Comparable<T2>> implements Comparato
  */
 public class quakes {
 
-	final private static String USA_STATE_DATA 				= "StateNamesAndCodes.csv";
+	final private static String USA_STATE_DATA 				= "StateNamesAndCode.csv";
 	final private static String USGS_EARTHQUAKE_DATA_API 	= "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
 	
 	final private static int TOP_US_STATES_NUMBER_OF_EARTHQUAKES 	= 5;
@@ -98,16 +98,19 @@ public class quakes {
 	 */
 	private static void readStateData() {
 
-		Path path = FileSystems.getDefault().getPath(".").toAbsolutePath();
-		String absPath = path.toString() + "\\src\\" + USA_STATE_DATA;
-		File file = new File(absPath);
-		if (!file.exists() || !file.canRead()) {
+		Path path		= FileSystems.getDefault().getPath(".").toAbsolutePath();
+		String absPath	= path.toString() + "\\src\\" + USA_STATE_DATA;
+		File file		= new File(absPath);
+		
+		if (!file.exists() || !file.canRead() || file.length() == 0) {
 			System.err.println("File: " + file.getAbsolutePath());
 			
 			if (!file.exists())
 				System.err.println(" ... not found.");
 			else if (!file.canRead())
 				System.err.println(" ... unable to be read.");
+			else
+				System.err.println(" ... is of size 0 bytes.");
 			
 			System.exit(-1);
 		}
