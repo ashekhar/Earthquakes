@@ -1,23 +1,22 @@
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 
-import java.util.Comparator;
-import java.util.Date;
+import java.nio.file.Path;
+import java.nio.file.FileSystems;
+
+import java.util.Map;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
-import java.util.PriorityQueue;
 import java.util.TreeMap;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONException;
 
 /*
  * GeoJSON Summary Format
@@ -84,7 +83,7 @@ class EarthquakeMagComparator<T1,T2 extends Comparable<T2>> implements Comparato
  */
 public class quakes {
 
-	final private static String USA_STATE_DATA 				= "StateNamesAndCode.csv";
+	final private static String USA_STATE_DATA 				= "StateNamesAndCodes.csv";
 	final private static String USGS_EARTHQUAKE_DATA_API 	= "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
 	
 	final private static int TOP_US_STATES_NUMBER_OF_EARTHQUAKES 	= 5;
@@ -98,7 +97,7 @@ public class quakes {
 	/**
 	 * Read the state/territory names and codes to build up the data structure.
 	 */
-	private static void readStateData() {
+	private static void buildUpStatesAndTerritoriesDataStructures() {
 
 		Path path		= FileSystems.getDefault().getPath(".").toAbsolutePath();
 		String absPath	= path.toString() + "\\src\\" + USA_STATE_DATA;
@@ -221,7 +220,7 @@ public class quakes {
 	 */
 	public static void main(String[] args) {
 
-		readStateData();
+		buildUpStatesAndTerritoriesDataStructures();
 
 		String firstArg = validateInputArguments(args);
 
@@ -236,21 +235,34 @@ public class quakes {
         TreeMap<String,Integer> earthquakeMagnitudeSortedMap	= new TreeMap<String,Integer>(comp);
 
 		// Get earthquake data (API response)
-		String earthquakesData = quakesHelperMethods.getEarthquakesData(USGS_EARTHQUAKE_DATA_API);
+		String earthquakesData = quakesHelperMethods.getEarthquakesDataFromUSGS(USGS_EARTHQUAKE_DATA_API);
 		if (!earthquakesData.isEmpty()) {
 
-			// Convert the string to a JSON object
-			JSONObject mainJSONObj = new JSONObject(earthquakesData);
+			JSONObject mainJSONObj = null;
+			JSONObject metadataObj = null;
+			int getStatus = 0;
+			int getTotalDataCount = 0;
+			
+			try{
+				// Convert the string to a JSON object & parse
+				mainJSONObj 		= new JSONObject(earthquakesData);
+				metadataObj			= mainJSONObj.getJSONObject("metadata");
+				getStatus			= metadataObj.getInt("status");
+				getTotalDataCount	= metadataObj.getInt("count");
 
-			// Parse
-			JSONObject metadataObj	= mainJSONObj.getJSONObject("metadata");
-			int getStatus			= metadataObj.getInt("status");
-			int getTotalDataCount	= metadataObj.getInt("count");
+			} catch (JSONException e) {
+					e.printStackTrace();
+			}
 
 			// Verify the API status code
 			if (getStatus == 200) {
 
-				JSONArray readingsJSONArray = mainJSONObj.getJSONArray("features");
+				JSONArray readingsJSONArray = null;
+				try {
+					readingsJSONArray = mainJSONObj.getJSONArray("features");					
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 
 				// Loop through the earthquake data
 				JSONObject reading		= null;
@@ -326,20 +338,17 @@ public class quakes {
 					}
 				}
 
-				DateFormat dateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss aa zzz yyyy");
-				Date date = new Date();
-				
 				if (firstArg.equalsIgnoreCase("top5")) {
 					
 					//Do this ("putAll") ONLY if the argument is "top5"
 					earthquakeMagnitudeSortedMap.putAll(earthquakeCountPerState);
 					
-					System.out.println("A list of the top 5 US states by number of earthquakes, highest to lowest. (As of " + dateFormat.format(date) + ")");
+					System.out.println("A list of the top 5 US states by number of earthquakes, highest to lowest. (As of " + quakesHelperMethods.getCurrentDataTime() + ")");
 					quakesHelperMethods.pollEarthquakeDataFromTreeMap(earthquakeMagnitudeSortedMap, TOP_US_STATES_NUMBER_OF_EARTHQUAKES);
 					
 				} else {
 					
-					System.out.println("A list of the top 25 strongest earthquakes in " + firstArg + ", highest to lowest. (As of " + dateFormat.format(date) + ")");
+					System.out.println("A list of the top 25 strongest earthquakes in " + firstArg + ", highest to lowest. (As of " + quakesHelperMethods.getCurrentDataTime() + ")");
 					System.out.println("Earthquakes reported for state: " + firstArg + " (Total number of recordings: " + sortedStateEarthquakeData.size() + ")");
 					quakesHelperMethods.pollEarthquakeDataFromPriorityQueue(sortedStateEarthquakeData, TOP_STRONGEST_EARTHQUAKES_IN_STATE);
 				}
