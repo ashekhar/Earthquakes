@@ -1,18 +1,54 @@
-import java.net.URL;
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+
+import java.net.URL;
 import java.net.HttpURLConnection;
-import java.net.ProtocolException;
 import java.net.MalformedURLException;
 
+import java.text.DateFormat;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+
 import java.util.Map;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.PriorityQueue;
 
 public class quakesHelperMethods {
 
+	final private static String TIMESTAMP_FORMAT = "EEE MMM dd hh:mm:ss aa zzz yyyy";
+
 	/**
+	 * Get current date and time
+	 * 
+	 * @return
+	 */
+	static String getCurrentDataTime() {
+		
+		DateFormat dateFormat = new SimpleDateFormat(TIMESTAMP_FORMAT);
+		Date date = new Date();
+		
+		return dateFormat.format(date);
+	}
+	
+	
+	/**
+	 * Convert long to time
+	 * 
+	 * @param time
+	 * @return
+	 */
+	static String convertLong2Time(long time) {
+	    
+		Date date = new Date(time);
+	    Format format = new SimpleDateFormat(TIMESTAMP_FORMAT);
+	    
+	    return format.format(date);
+	}
+	
+	/**
+	 * Usage:
+	 * 
 	 * @param className
 	 * @param args0
 	 */
@@ -43,12 +79,9 @@ public class quakesHelperMethods {
 
 		Integer upperLimit = pQueue.size() > count ? count : pQueue.size();
 
-		Calendar c = Calendar.getInstance();
-
 		for (int i = 0; i < upperLimit; i++) {
 			EarthquakeDataNode data = pQueue.poll();
-			c.setTimeInMillis(data.time);
-			System.out.println("	" + data.summaryWithLocation + " @ " + c.getTime());
+			System.out.println("	" + data.summaryWithLocation + " @ " + convertLong2Time(data.time));
 		}
 	}
 
@@ -77,50 +110,53 @@ public class quakesHelperMethods {
 	 * @param urlStr
 	 * @return
 	 */
-	public static String getEarthquakesData(String urlStr) {
-
-		//"https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
+	public static String getEarthquakesDataFromUSGS(String urlStr) {
 
 		StringBuilder result = new StringBuilder();
 		URL url = null;
+		
 		try {
 			url = new URL(urlStr);
-		} catch (MalformedURLException e1) {
-			e1.printStackTrace();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
 		}
 
 		HttpURLConnection conn = null;
+		
 		try {
 			conn = (HttpURLConnection) url.openConnection();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try {
 			conn.setRequestMethod("GET");
-		} catch (ProtocolException e) {
 
-			e.printStackTrace();
-		}
-		BufferedReader rd = null;
-		try {
-			rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		String line;
-		try {
-			while ((line = rd.readLine()) != null) {
-				result.append(line);
+			if (conn.getResponseCode() == 200) {
+				
+				if (conn.getContentType().contains("json")) {
+					
+					BufferedReader rd = null;
+					rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+					String line;
+					
+					while ((line = rd.readLine()) != null) {
+						result.append(line);
+					}
+
+					rd.close();
+
+					return result.toString();
+					
+				} else {
+					System.err.println("Error: Content type is not of type \"application/json\"");
+					System.exit(-1);					
+				}
+				
+			} else {
+				System.err.println("Error: Fetching data from USGS.");
+				System.exit(-1);
 			}
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		try {
-			rd.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return result.toString();
+		
+		return null;
 	}
 }
