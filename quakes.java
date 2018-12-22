@@ -3,7 +3,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -76,11 +77,12 @@ class EarthquakeMagComparator<T1,T2 extends Comparable<T2>> implements Comparato
 
 /**
  * @author ashekhar
+ * Main class
  *
  */
 public class quakes {
 
-	final private static String USA_STATE_DATA 				= "C:\\Users\\ashekhar\\workspace\\Earthquakes\\src\\StateNamesAndCodes.csv";
+	final private static String USA_STATE_DATA 				= "StateNamesAndCodes.csv";
 	final private static String USGS_EARTHQUAKE_DATA_API 	= "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
 	
 	final private static int TOP_US_STATES_NUMBER_OF_EARTHQUAKES 	= 5;
@@ -96,7 +98,19 @@ public class quakes {
 	 */
 	private static void readStateData() {
 
-		File file = new File(USA_STATE_DATA);
+		Path path = FileSystems.getDefault().getPath(".").toAbsolutePath();
+		String absPath = path.toString() + "\\src\\" + USA_STATE_DATA;
+		File file = new File(absPath);
+		if (!file.exists() || !file.canRead()) {
+			System.err.println("File: " + file.getAbsolutePath());
+			
+			if (!file.exists())
+				System.err.println(" ... not found.");
+			else if (!file.canRead())
+				System.err.println(" ... unable to be read.");
+			
+			System.exit(-1);
+		}
 
 		BufferedReader br = null;
 		try {
@@ -116,6 +130,7 @@ public class quakes {
 				// Support both state name and state codes
 				NamesOfTerritoriesAndStates.add(name);
 				CodesOfTerritoriesAndStates.add(code);
+				
 				StateNames2Codes.put(name, code);
 				StateCodes2Names.put(code, name);
 			}
