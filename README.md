@@ -5,9 +5,13 @@ Please use tab space = 4
 Important: 
 Place the files as part of folder "src".
 
+- StateNamesAndCodes.csv: Data file containing names of states and territories along with their codes.
+- quakes.java: Main program
+- quakesHelperMethods.java: Helper methods
+- pom.xml: Dependencies
 
-GeoJSON Summary Format: https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php
-Data source: https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson
+- GeoJSON Summary Format: https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php
+- Data source: https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson
 
 Suppose your team analyzes the largest earthquakes in the United States.
 Your manager has asked you to create a tool that will print the following to the console:
