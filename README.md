@@ -20,7 +20,9 @@ https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson
  
 Instructions:
 - Your program should be runnable using these commands, but may have alternate interfaces.
+
 Part 1) `quakes --top5`
+
 Part 2) `quakes --california`
 
 - It is sufficient to assume that "22km NW of Truckee, California" is an earthquake located in California.
