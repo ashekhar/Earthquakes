@@ -45,6 +45,7 @@ class EarthquakeDataNodeComparator implements Comparator<EarthquakeDataNode> {
 	// for descending order of magnitude
 	@Override
 	public int compare(EarthquakeDataNode e1, EarthquakeDataNode e2) {
+		
 		if (e1.magnitude < e2.magnitude)
 			return 1;
 		else if (e1.magnitude > e2.magnitude)
@@ -61,6 +62,7 @@ class EarthquakeDataNodeComparator implements Comparator<EarthquakeDataNode> {
  * @param <T2>
  */
 class EarthquakeMagComparator<T1,T2 extends Comparable<T2>> implements Comparator<T1> {
+	
     Map<T1,T2> base;
     public EarthquakeMagComparator(Map<T1,T2> base) {
         this.base = base;
@@ -123,19 +125,19 @@ public class quakes {
 		}
 
 		String line;
-		String code, name;
+		String stateCode, stateName;
 		try {
 
 			while ((line = br.readLine()) != null) {
-				code = line.split(",")[0];
-				name = line.split(",")[1];
+				stateCode = line.split(",")[0];
+				stateName = line.split(",")[1];
 				
 				// Support both state name and state codes
-				NamesOfTerritoriesAndStates.add(name);
-				CodesOfTerritoriesAndStates.add(code);
+				NamesOfTerritoriesAndStates.add(stateName);
+				CodesOfTerritoriesAndStates.add(stateCode);
 				
-				StateNames2Codes.put(name, code);
-				StateCodes2Names.put(code, name);
+				StateNames2Codes.put(stateName, stateCode);
+				StateCodes2Names.put(stateCode, stateName);
 			}
 
 		} catch (IOException e) {
@@ -169,6 +171,7 @@ public class quakes {
 	 * @return stateStr
 	 */
 	private static String convertStateCode2NameIfNeeded(String stateStr) {
+		
 		if (CodesOfTerritoriesAndStates.contains(stateStr))
 			return StateCodes2Names.get(stateStr);
 		else
