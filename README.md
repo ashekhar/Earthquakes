@@ -22,8 +22,7 @@ Instructions:
 - Your program should be runnable using these commands, but may have alternate interfaces.
 Part 1) `quakes --top5`
 Part 2) `quakes --california`
-- Submissions should be done in Ruby (preferred), Python, or JavaScript.
-- External APIs are not required.
+
 - It is sufficient to assume that "22km NW of Truckee, California" is an earthquake located in California.
 - When displaying an earthquake's data, please include the time (eg format: 2017-07-13T22:09:53+00:00), the location, and magnitude of the quake.
 
@@ -31,13 +30,13 @@ Usage: java quakes --top5 | --<Name of state | State initials>
 
 Note:
 For the following states please use the state code.
-	New Hampshire - NH
-	New Jersey - NJ
-	New Mexico - NM
-	New York - NY
-	North Carolina - NC
-	North Dakota - ND
-	Rhode Island - RI
-	South Carolina - SC
-	South Dakota - SD
-	West Virginia - WV
+	New Hampshire (NH)
+	New Jersey (NJ)
+	New Mexico (NM)
+	New York (NY)
+	North Carolina (NC)
+	North Dakota (ND)
+	Rhode Island (RI)
+	South Carolina (SC)
+	South Dakota (SD)
+	West Virginia (WV)
