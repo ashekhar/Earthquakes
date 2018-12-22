@@ -2,6 +2,10 @@
 
 Please use tab space = 4
 
+Important: 
+Place the files as part of folder "src".
+
+
 GeoJSON Summary Format: https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php
 Data source: https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson
 
