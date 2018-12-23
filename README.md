@@ -38,7 +38,7 @@ Part 3) `quakes --statestop5`
 Usage: java quakes --top5 | --statestop5 | --<Name of state | State initials>
 
 Note:
-For the following states/territories, please use the state code.
+For the following states/territories, please use the corresponding state/territory code.
 - States ...
 	- District of Columbia (DC)
 	- New Hampshire (NH)
