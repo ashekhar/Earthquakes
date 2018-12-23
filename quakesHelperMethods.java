@@ -71,6 +71,28 @@ public class quakesHelperMethods {
 	}
 
 	/**
+	 * To uppercase 1st character of a word
+	 * 
+	 * @param givenString
+	 * @return
+	 */
+	public static String capitalizeFully(String givenString) {
+		
+		if (givenString.isEmpty())
+			return givenString;
+		
+	    String[] arr = givenString.split(" ");
+	    StringBuilder strBuilder = new StringBuilder();
+
+	    for (int i = 0; i < arr.length; i++) {
+	    	strBuilder.append(Character.toUpperCase(arr[i].charAt(0)))
+	            .append(arr[i].substring(1))
+	            .append(" ");
+	    }          
+	    return strBuilder.toString().trim();
+	}  
+	
+	/**
 	 * Print the top 5 entries in the priority queue
 	 * 
 	 * @param pQueue
