@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.TreeMap;
 import java.util.Comparator;
 import java.util.PriorityQueue;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -88,6 +89,7 @@ public class quakes {
 	
 	final private static int TOP_US_STATES_NUMBER_OF_EARTHQUAKES 	= 5;
 	final private static int TOP_STRONGEST_EARTHQUAKES_IN_STATE 	= 25;
+	final private static int TOP_STRONGEST_EARTHQUAKES_PER_STATE 	= 5;
 
 	private static HashSet<String> NamesOfTerritoriesAndStates 	= new HashSet<String>();
 	private static HashSet<String> CodesOfTerritoriesAndStates 	= new HashSet<String>();
@@ -228,7 +230,7 @@ public class quakes {
 					// Remove the initial "--"
 					firstArg = args[0].substring(2);
 
-					if (firstArg.equalsIgnoreCase("top5")) {
+					if (firstArg.equalsIgnoreCase("top5") || firstArg.equalsIgnoreCase("statestop5")) {
 						return firstArg;
 					} else if (!isEarthquakeWithinUSA(firstArg)) {
 						System.err.println("Error: Invalid state name/state initials.");
@@ -254,13 +256,29 @@ public class quakes {
 
 		Comparator<EarthquakeDataNode> EarthquakeDataComparator = new EarthquakeDataNodeComparator();
 
-		// Overall top 25 for a given state.
-		PriorityQueue<EarthquakeDataNode> sortedStateEarthquakeData = new PriorityQueue<EarthquakeDataNode>(100, EarthquakeDataComparator);
+		/*
+		 * Overall top 25 for a given state.
+		 * --<State/Terriroty code | State/Terriroty name>
+		 */
+		PriorityQueue<EarthquakeDataNode> sortedStateEarthquakeData = new PriorityQueue<EarthquakeDataNode>(TOP_STRONGEST_EARTHQUAKES_IN_STATE, EarthquakeDataComparator);
 
-		// Overall top 5 states by number of earthquakes
+		/*
+		 * Overall top 5 states by number of earthquakes
+		 * --top5
+		 */
 		Map<String, Integer> earthquakeCountPerState			= new HashMap<String, Integer>();
 		EarthquakeMagComparator comp							= new EarthquakeMagComparator(earthquakeCountPerState);
         TreeMap<String,Integer> earthquakeMagnitudeSortedMap	= new TreeMap<String,Integer>(comp);
+
+		/*
+		 * Overall top 5 per state.
+		 * --statestop5
+		 * 
+		 * For each state, the value is a priority queue. The priority queue is created and 
+		 * assigned to the map during run time only for those states there is data.
+		 */
+		Map<String, Object> earthquakeDataPerState = new HashMap<>();
+		//PriorityQueue<EarthquakeDataNode> sortedEarthquakeDataPerState = new PriorityQueue<EarthquakeDataNode>(TOP_STRONGEST_EARTHQUAKES_PER_STATE, EarthquakeDataComparator);
 
 		// Get earthquake data (API response)
 		String earthquakesData = quakesHelperMethods.getEarthquakesDataFromUSGS(USGS_EARTHQUAKE_DATA_API);
@@ -347,15 +365,34 @@ public class quakes {
 
 									if (firstArg.equalsIgnoreCase("top5")) {
 										
-										// Keep track of number of earthquakes in each state.
+										/*
+										 * Overall top 5 earthquakes in USA
+										 * Keep track of number of earthquakes in each state.
+										 */
 										if (earthquakeCountPerState.containsKey(stateStrUpdated.toString())) {
 											earthquakeCountPerState.put(stateStrUpdated.toString(), earthquakeCountPerState.get(stateStrUpdated.toString()) + 1);
 										} else {
 											earthquakeCountPerState.put(stateStrUpdated.toString(), 1);
 										}
 										
+									} else if (firstArg.equalsIgnoreCase("statestop5")) {
+										
+										/*
+										 * Overall top 5 earthquakes in USA
+										 * Create the priority queue for a given state
+										 */
+										if (!earthquakeDataPerState.containsKey(stateStr.toString())) {
+											earthquakeDataPerState.put(stateStr.toString(), new PriorityQueue<EarthquakeDataNode>(TOP_STRONGEST_EARTHQUAKES_PER_STATE, EarthquakeDataComparator));
+										}
+
+										// Populate the priority queue
+										PriorityQueue<EarthquakeDataNode> tempPQueue;
+										tempPQueue = (PriorityQueue<EarthquakeDataNode>) earthquakeDataPerState.get(stateStr.toString());
+										tempPQueue.add(eqData);										
+										
 									} else {
 										
+										// Collecting data for a particular state
 										firstArg = convertStateCode2NameIfNeeded(firstArg);
 										if (firstArg.equalsIgnoreCase(stateStrUpdated.toString()))
 											sortedStateEarthquakeData.add(eqData);
@@ -373,11 +410,22 @@ public class quakes {
 					
 					System.out.println("A list of the top 5 US states by number of earthquakes, highest to lowest. (As of " + quakesHelperMethods.getCurrentDataTime() + ")");
 					quakesHelperMethods.pollEarthquakeDataFromTreeMap(earthquakeMagnitudeSortedMap, TOP_US_STATES_NUMBER_OF_EARTHQUAKES);
+				
+				} else if (firstArg.equalsIgnoreCase("statestop5")) {
+
+					System.out.println("A list of the top 5 earthquakes in each state, highest to lowest. (As of " + quakesHelperMethods.getCurrentDataTime() + ")");
+					Set<String> keys = earthquakeDataPerState.keySet();
+					PriorityQueue<EarthquakeDataNode> sortedEarthquakeDataPerState = null;
+					for (String state : keys) {
+						sortedEarthquakeDataPerState = (PriorityQueue<EarthquakeDataNode>) earthquakeDataPerState.get(state);
+						System.out.println("State: " + state + " (Number of earthquake(s) reported : "	+ sortedEarthquakeDataPerState.size() + ")");
+						quakesHelperMethods.pollEarthquakeDataFromPriorityQueue(sortedEarthquakeDataPerState, TOP_STRONGEST_EARTHQUAKES_PER_STATE);
+					}
 					
 				} else {
 					
 					System.out.println("A list of the top 25 strongest earthquakes in " + firstArg + ", highest to lowest. (As of " + quakesHelperMethods.getCurrentDataTime() + ")");
-					System.out.println("Earthquakes reported for state: " + firstArg + " (Total number of recordings: " + sortedStateEarthquakeData.size() + ")");
+					System.out.println("Earthquakes reported for state: " + firstArg + " (Number of earthquake(s) reported: " + sortedStateEarthquakeData.size() + ")");
 					quakesHelperMethods.pollEarthquakeDataFromPriorityQueue(sortedStateEarthquakeData, TOP_STRONGEST_EARTHQUAKES_IN_STATE);
 				}
 
