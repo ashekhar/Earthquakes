@@ -59,18 +59,25 @@ public class quakesHelperMethods {
 		System.out.println("--statestop5: A list of the top 25 strongest earthquakes in each state of occurence, highest to lowest");
 		System.out.println("--<Name of state | State initials>: A list of the top 25 strongest earthquakes in a specific state, highest to lowest");
 		System.out.println("\tEx: --california | --California | --CA | --ca\n");
-		System.out.println("For the following states please use the state code.");
+		System.out.println("For the following states/territories, please use the state code.");
+		System.out.println("States ...");
+		System.out.println("\tDistrict of Columbia (DC)");
 		System.out.println("\tNew Hampshire (NH)"); 
-		System.out.println("\tNew Jersey (NJ)"); 
+		System.out.println("\tNew Jersey (NJ)");
 		System.out.println("\tNew Mexico (NM)"); 
-		System.out.println("\tNew York (NY)"); 
+		System.out.println("\tNew York (NY)");
 		System.out.println("\tNorth Carolina (NC)"); 
-		System.out.println("\tNorth Dakota (ND)"); 
-		System.out.println("\tRhode Island (RI)"); 
+		System.out.println("\tNorth Dakota (ND)");
+		System.out.println("\tRhode Island (RI)");
 		System.out.println("\tSouth Carolina (SC)"); 
-		System.out.println("\tSouth Dakota (SD)"); 
-		System.out.println("\tWest Virginia (WV)"); 
-
+		System.out.println("\tSouth Dakota (SD)");
+		System.out.println("\tWest Virginia (WV)");
+		System.out.println("Territories ...");
+		System.out.println("\tAmerican Samoa (AS)");
+		System.out.println("\tNorthern Mariana Islands (MP)");
+		System.out.println("\tPuerto Rico (PR)");
+		System.out.println("\tU.S. Virgin Islands (VI)");
+		
 		System.exit(-1);
 	}
 
@@ -253,6 +260,7 @@ public class quakesHelperMethods {
 		{"GU", "Guam"},
 		{"MP", "Northern Mariana Islands"},
 		{"PR", "Puerto Rico"},
-		{"VI", "United States Virgin Islands"}		
+		{"VI", "U.S. Virgin Islands"}		
+//		{"VI", "United States Virgin Islands"}		
 	};
 }
