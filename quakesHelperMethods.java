@@ -54,7 +54,11 @@ public class quakesHelperMethods {
 	 */
 	static void usage(String className, String args0) {
 		
-		System.err.println("Usage: java " + className + " --top5 | --statestop5 | --<Name of state | State initials>");
+		System.err.println("Usage: java " + className + " --top5 | --statestop5 | --<Name of state | State initials>\n");
+		System.out.println("--top5: A list of the top 5 US states by number of earthquakes, highest to lowest");
+		System.out.println("--statestop5: A list of the top 25 strongest earthquakes in each state of occurence, highest to lowest");
+		System.out.println("--<Name of state | State initials>: A list of the top 25 strongest earthquakes in a specific state, highest to lowest");
+		System.out.println("\tEx: --california | --California | --CA | --ca\n");
 		System.out.println("For the following states please use the state code.");
 		System.out.println("\tNew Hampshire (NH)"); 
 		System.out.println("\tNew Jersey (NJ)"); 
