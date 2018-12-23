@@ -28,7 +28,9 @@ Instructions:
 
 Part 1) `quakes --top5`
 
-Part 2) `quakes --california`
+Part 2) `quakes --statestop5`
+
+Part 3) `quakes --california` or `quakes --CA`
 
 - It is sufficient to assume that "22km NW of Truckee, California" is an earthquake located in California.
 - When displaying an earthquake's data, please include the time (eg format: 2017-07-13T22:09:53+00:00), the location, and magnitude of the quake.
