@@ -2,10 +2,7 @@
 
 Please use tab space = 4
 
-Important: 
-Place the files as part of folder "src".
-
-- StateNamesAndCodes.csv: Data file containing names of states and territories along with their codes.
+- StateNamesAndCodes.csv: Data file containing names of states and territories along with their codes. (No longer needed - Can be used for reference)
 - quakes.java: Main program
 - quakesHelperMethods.java: Helper methods
 - pom.xml: Dependencies
