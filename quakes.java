@@ -26,8 +26,9 @@ import org.json.JSONException;
  */
 
 /**
- * @author ashekhar
  * Class to capture necessary earthquake data for further processing.
+ * 
+ * @author ashekhar
  */
 class EarthquakeDataNode {
 	Float magnitude;
@@ -38,6 +39,7 @@ class EarthquakeDataNode {
 
 /**
  * Custom comparator to sort the earthquake data based on the magnitude
+ * 
  * @author ashekhar 
  */
 class EarthquakeDataNodeComparator implements Comparator<EarthquakeDataNode> {
@@ -58,6 +60,7 @@ class EarthquakeDataNodeComparator implements Comparator<EarthquakeDataNode> {
 
 /**
  * Custom comparator to sort the earthquake data based on the occurrence in various states
+ * 
  * @author ashekhar
  * @param <T1>
  * @param <T2>
@@ -79,9 +82,9 @@ class EarthquakeMagComparator<T1,T2 extends Comparable<T2>> implements Comparato
 }
 
 /**
- * @author ashekhar
  * Main class
- *
+ * 
+ * @author ashekhar
  */
 public class quakes {
 
@@ -155,6 +158,9 @@ public class quakes {
 		}
 	}
 
+	/**
+	 * BuildUp States and Territories Data Structures
+	 */
 	private static void buildUpStatesAndTerritoriesDataStructures() {
 
 		//String stateCode, stateName;
@@ -182,6 +188,7 @@ public class quakes {
 
 	/**
 	 * Verify if the earthquake event occurred within USA or not.
+	 * 
 	 * @param stateStr
 	 * @return boolean
 	 */
@@ -195,6 +202,7 @@ public class quakes {
 
 	/**
 	 * Convert the state/territory code to its corresponding name
+	 * 
 	 * @param stateStr
 	 * @return stateStr
 	 */
@@ -208,6 +216,7 @@ public class quakes {
 
 	/**
 	 * Validate input arguments.
+	 * 
 	 * @param args
 	 * @return firstArg
 	 */
@@ -240,6 +249,7 @@ public class quakes {
 				}
 			}
 		} else {
+			
 			if (args.length == 0)
 				quakesHelperMethods.usage(className, "");
 			else
@@ -250,6 +260,8 @@ public class quakes {
 	}
 
 	/**
+	 * Main program
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
@@ -293,7 +305,7 @@ public class quakes {
 			int getStatus = 0;
 			int getTotalDataCount = 0;
 			
-			try{
+			try {
 				// Convert the string to a JSON object & parse
 				mainJSONObj 		= new JSONObject(earthquakesData);
 				metadataObj			= mainJSONObj.getJSONObject("metadata");
@@ -339,15 +351,13 @@ public class quakes {
 						StringBuilder magStr = new StringBuilder();
 						magStr.append(properties.getString("title").split(" - ")[0].split(" ")[1]);
 
-						// Ignore if mag value is null or if the mag value in
-						// title is ?
+						// Ignore if mag value is null or if the mag value in title is ?
 						if (!magStr.toString().equals("?")) {
 							float magFloat = Float.parseFloat(magStr.toString());
 
 							/*
-							 * Invalid title: M 4.5 - Federated States of
-							 * Micronesia region Proceed ONLY if there is a
-							 * state component in the title.
+							 * Invalid title: M 4.5 - Federated States of Micronesia region 
+							 * Proceed ONLY if there is a state component in the title.
 							 */
 							if (properties.getString("title").split(", ").length == 2) {
 
@@ -420,6 +430,7 @@ public class quakes {
 					System.out.println("A list of the top 5 earthquakes in each state, highest to lowest. (As of " + quakesHelperMethods.getCurrentDataTime() + ")");
 					Set<String> keys = earthquakeDataPerState.keySet();
 					PriorityQueue<EarthquakeDataNode> sortedEarthquakeDataPerState = null;
+					
 					for (String state : keys) {
 						sortedEarthquakeDataPerState = (PriorityQueue<EarthquakeDataNode>) earthquakeDataPerState.get(state);
 						System.out.println("State: " + quakesHelperMethods.capitalizeFully(state) + " (Number of earthquake(s) reported : "	+ sortedEarthquakeDataPerState.size() + ")");
