@@ -2,12 +2,15 @@
 
 Please use tab space = 4
 
-- StateNamesAndCodes.csv: Data file containing names of states and territories along with their codes. (No longer needed - Can be used for reference)
+Source:
 - quakes.java: Main program
 - quakesHelperMethods.java: Helper methods
 - pom.xml: Dependencies
 
-Source/Reference:
+Only for reference:
+- StateNamesAndCodes.csv: Data file containing names of states and territories along with their codes.
+
+Earthquake data Source/Reference:
 - GeoJSON Summary Format: https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php
 - Data source: https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson
 
