@@ -54,7 +54,7 @@ public class quakesHelperMethods {
 	 */
 	static void usage(String className, String args0) {
 		
-		System.err.println("Usage: java " + className + " --top5 | --<Name of state | State initials>");
+		System.err.println("Usage: java " + className + " --top5 | --statestop5 | --<Name of state | State initials>");
 		System.out.println("For the following states please use the state code.");
 		System.out.println("\tNew Hampshire (NH)"); 
 		System.out.println("\tNew Jersey (NJ)"); 
@@ -129,8 +129,10 @@ public class quakesHelperMethods {
 			conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("GET");
 
+			// HTTP Status
 			if (conn.getResponseCode() == 200) {
 				
+				// Content Type is JSON
 				if (conn.getContentType().contains("json")) {
 					
 					BufferedReader rd = null;
@@ -138,7 +140,7 @@ public class quakesHelperMethods {
 					String line;
 					
 					int lineCounter = 0;
-					
+					// Display 1 "." for every 100 lines
 					while ((line = rd.readLine()) != null) {
 						result.append(line);
 						lineCounter++;
