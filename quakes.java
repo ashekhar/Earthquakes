@@ -8,12 +8,13 @@ import java.nio.file.Path;
 import java.nio.file.FileSystems;
 
 import java.util.Map;
+import java.util.Set;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.TreeMap;
 import java.util.Comparator;
 import java.util.PriorityQueue;
-import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -237,9 +238,12 @@ public class quakes {
 						quakesHelperMethods.usage(className, args[0]);
 					}
 				}
-			} else {
-				quakesHelperMethods.usage(className, args[0]);				
 			}
+		} else {
+			if (args.length == 0)
+				quakesHelperMethods.usage(className, "");
+			else
+				quakesHelperMethods.usage(className, Arrays.toString(args));				
 		}
 
 		return firstArg;
