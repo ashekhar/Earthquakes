@@ -56,7 +56,7 @@ class EarthquakeDataNodeComparator implements Comparator<EarthquakeDataNode> {
 }
 
 /**
- * Custom comparator to sort the earthquake data based on the occurance in various states
+ * Custom comparator to sort the earthquake data based on the occurrence in various states
  * @author ashekhar
  * @param <T1>
  * @param <T2>
@@ -164,11 +164,11 @@ public class quakes {
 			stateName = quakesHelperMethods.StateNamesAndCodes[i][1];
 			*/
 			// Support both state name and state codes
-			NamesOfTerritoriesAndStates.add(quakesHelperMethods.StateNamesAndCodes[i][1]);
-			CodesOfTerritoriesAndStates.add(quakesHelperMethods.StateNamesAndCodes[i][0]);
+			NamesOfTerritoriesAndStates.add(quakesHelperMethods.StateNamesAndCodes[i][1].toLowerCase());
+			CodesOfTerritoriesAndStates.add(quakesHelperMethods.StateNamesAndCodes[i][0].toLowerCase());
 			
-			StateNames2Codes.put(quakesHelperMethods.StateNamesAndCodes[i][1], quakesHelperMethods.StateNamesAndCodes[i][0]);
-			StateCodes2Names.put(quakesHelperMethods.StateNamesAndCodes[i][0], quakesHelperMethods.StateNamesAndCodes[i][1]);
+			StateNames2Codes.put(quakesHelperMethods.StateNamesAndCodes[i][1].toLowerCase(), quakesHelperMethods.StateNamesAndCodes[i][0]);
+			StateCodes2Names.put(quakesHelperMethods.StateNamesAndCodes[i][0].toLowerCase(), quakesHelperMethods.StateNamesAndCodes[i][1]);
 		}
 		
 		if ((NamesOfTerritoriesAndStates.size() != CodesOfTerritoriesAndStates.size())
@@ -228,7 +228,7 @@ public class quakes {
 				if (args[0].substring(0, 2).equals("--")) {
 				
 					// Remove the initial "--"
-					firstArg = args[0].substring(2);
+					firstArg = args[0].substring(2).toLowerCase();
 
 					if (firstArg.equalsIgnoreCase("top5") || firstArg.equalsIgnoreCase("statestop5")) {
 						return firstArg;
@@ -236,7 +236,7 @@ public class quakes {
 						System.err.println("Error: Invalid state name/state initials.");
 						quakesHelperMethods.usage(className, args[0]);
 					}
-				}			
+				}
 			} else {
 				quakesHelperMethods.usage(className, args[0]);				
 			}
@@ -348,13 +348,13 @@ public class quakes {
 							if (properties.getString("title").split(", ").length == 2) {
 
 								StringBuilder stateStr = new StringBuilder();
-								stateStr.append(properties.getString("title").split(", ")[1]);
+								stateStr.append(properties.getString("title").split(", ")[1].toLowerCase());
 								
 								// Validate if the data is indeed in the USA
 								if (isEarthquakeWithinUSA(stateStr.toString())) {
 
 									StringBuilder stateStrUpdated = new StringBuilder();
-									stateStrUpdated = stateStrUpdated.append(convertStateCode2NameIfNeeded(stateStr.toString()));
+									stateStrUpdated = stateStrUpdated.append(convertStateCode2NameIfNeeded(stateStr.toString()).toLowerCase());
 
 									// Build earthquake data object
 									EarthquakeDataNode eqData	= new EarthquakeDataNode();
@@ -418,14 +418,14 @@ public class quakes {
 					PriorityQueue<EarthquakeDataNode> sortedEarthquakeDataPerState = null;
 					for (String state : keys) {
 						sortedEarthquakeDataPerState = (PriorityQueue<EarthquakeDataNode>) earthquakeDataPerState.get(state);
-						System.out.println("State: " + state + " (Number of earthquake(s) reported : "	+ sortedEarthquakeDataPerState.size() + ")");
+						System.out.println("State: " + quakesHelperMethods.capitalizeFully(state) + " (Number of earthquake(s) reported : "	+ sortedEarthquakeDataPerState.size() + ")");
 						quakesHelperMethods.pollEarthquakeDataFromPriorityQueue(sortedEarthquakeDataPerState, TOP_STRONGEST_EARTHQUAKES_PER_STATE);
 					}
 					
 				} else {
 					
-					System.out.println("A list of the top 25 strongest earthquakes in " + firstArg + ", highest to lowest. (As of " + quakesHelperMethods.getCurrentDataTime() + ")");
-					System.out.println("Earthquakes reported for state: " + firstArg + " (Number of earthquake(s) reported: " + sortedStateEarthquakeData.size() + ")");
+					System.out.println("A list of the top 25 strongest earthquakes in " + quakesHelperMethods.capitalizeFully(firstArg) + ", highest to lowest. (As of " + quakesHelperMethods.getCurrentDataTime() + ")");
+					System.out.println("Earthquakes reported for state: " + quakesHelperMethods.capitalizeFully(firstArg) + " (Number of earthquake(s) reported: " + sortedStateEarthquakeData.size() + ")");
 					quakesHelperMethods.pollEarthquakeDataFromPriorityQueue(sortedStateEarthquakeData, TOP_STRONGEST_EARTHQUAKES_IN_STATE);
 				}
 
