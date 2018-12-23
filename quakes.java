@@ -97,7 +97,8 @@ public class quakes {
 	/**
 	 * Read the state/territory names and codes to build up the data structure.
 	 */
-	private static void buildUpStatesAndTerritoriesDataStructures() {
+	@Deprecated
+	private static void buildUpStatesAndTerritoriesDataStructuresOld() {
 
 		Path path		= FileSystems.getDefault().getPath(".").toAbsolutePath();
 		String absPath	= path.toString() + "\\src\\" + USA_STATE_DATA;
@@ -151,6 +152,31 @@ public class quakes {
 		}
 	}
 
+	private static void buildUpStatesAndTerritoriesDataStructures() {
+
+		//String stateCode, stateName;
+		
+		for (int i = 0; i < quakesHelperMethods.StateNamesAndCodes.length; i++) {
+			/*
+			stateCode = quakesHelperMethods.StateNamesAndCodes[i][0];
+			stateName = quakesHelperMethods.StateNamesAndCodes[i][1];
+			*/
+			// Support both state name and state codes
+			NamesOfTerritoriesAndStates.add(quakesHelperMethods.StateNamesAndCodes[i][1]);
+			CodesOfTerritoriesAndStates.add(quakesHelperMethods.StateNamesAndCodes[i][0]);
+			
+			StateNames2Codes.put(quakesHelperMethods.StateNamesAndCodes[i][1], quakesHelperMethods.StateNamesAndCodes[i][0]);
+			StateCodes2Names.put(quakesHelperMethods.StateNamesAndCodes[i][0], quakesHelperMethods.StateNamesAndCodes[i][1]);
+		}
+		
+		if ((NamesOfTerritoriesAndStates.size() != CodesOfTerritoriesAndStates.size())
+				|| (StateNames2Codes.size() != StateCodes2Names.size())
+				|| (NamesOfTerritoriesAndStates.size() != StateCodes2Names.size())) {
+			System.err.println("Error: State data loading.");
+			System.exit(-1);
+		}
+	}
+
 	/**
 	 * Verify if the earthquake event occurred within USA or not.
 	 * @param stateStr
@@ -193,7 +219,9 @@ public class quakes {
 		if (args.length == 1) {
 			
 			// at-least need 3 characters to proceed
-			if (args[0].length() > 3) {
+			// -- 2 characters
+			// State code 2 characters
+			if (args[0].length() >= 4) {
 			
 				if (args[0].substring(0, 2).equals("--")) {
 				
