@@ -35,17 +35,24 @@ Part 3) `quakes --statestop5`
 - It is sufficient to assume that "22km NW of Truckee, California" is an earthquake located in California.
 - When displaying an earthquake's data, please include the time (eg format: 2017-07-13T22:09:53+00:00), the location, and magnitude of the quake.
 
-Usage: java quakes --top5 | --<Name of state | State initials>
+Usage: java quakes --top5 | --statestop5 | --<Name of state | State initials>
 
 Note:
-For the following states please use the state code.
-	New Hampshire (NH)
-	New Jersey (NJ)
-	New Mexico (NM)
-	New York (NY)
-	North Carolina (NC)
-	North Dakota (ND)
-	Rhode Island (RI)
-	South Carolina (SC)
-	South Dakota (SD)
-	West Virginia (WV)
+For the following states/territories, please use the state code.
+- States ...
+	-- District of Columbia (DC)
+	-- New Hampshire (NH)
+	-- New Jersey (NJ)
+	-- New Mexico (NM)
+	-- New York (NY)
+	-- North Carolina (NC)
+	-- North Dakota (ND)
+	-- Rhode Island (RI)
+	-- South Carolina (SC)
+	-- South Dakota (SD)
+	-- West Virginia (WV)
+- Territories ...
+	-- American Samoa (AS)
+	-- Northern Mariana Islands (MP)
+	-- Puerto Rico (PR)
+	-- U.S. Virgin Islands (VI)
