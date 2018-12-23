@@ -88,7 +88,6 @@ class EarthquakeMagComparator<T1,T2 extends Comparable<T2>> implements Comparato
  */
 public class quakes {
 
-	final private static String USA_STATE_DATA 				= "StateNamesAndCodes.csv";
 	final private static String USGS_EARTHQUAKE_DATA_API 	= "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
 	
 	final private static int TOP_US_STATES_NUMBER_OF_EARTHQUAKES 	= 5;
@@ -99,64 +98,6 @@ public class quakes {
 	private static HashSet<String> CodesOfTerritoriesAndStates 	= new HashSet<String>();
 	private static Map<String, String> StateNames2Codes 		= new HashMap<String, String>();
 	private static Map<String, String> StateCodes2Names 		= new HashMap<String, String>();
-
-	/**
-	 * Read the state/territory names and codes to build up the data structure.
-	 */
-	@Deprecated
-	private static void buildUpStatesAndTerritoriesDataStructuresOld() {
-
-		Path path		= FileSystems.getDefault().getPath(".").toAbsolutePath();
-		String absPath	= path.toString() + "\\src\\" + USA_STATE_DATA;
-		File file		= new File(absPath);
-		
-		if (!file.exists() || !file.canRead() || file.length() == 0) {
-			System.err.println("File: " + file.getAbsolutePath());
-			
-			if (!file.exists())
-				System.err.println(" ... not found.");
-			else if (!file.canRead())
-				System.err.println(" ... unable to be read.");
-			else
-				System.err.println(" ... is of size 0 bytes.");
-			
-			System.exit(-1);
-		}
-
-		BufferedReader br = null;
-		try {
-			br = new BufferedReader(new FileReader(file));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		String line;
-		String stateCode, stateName;
-		try {
-
-			while ((line = br.readLine()) != null) {
-				stateCode = line.split(",")[0];
-				stateName = line.split(",")[1];
-				
-				// Support both state name and state codes
-				NamesOfTerritoriesAndStates.add(stateName);
-				CodesOfTerritoriesAndStates.add(stateCode);
-				
-				StateNames2Codes.put(stateName, stateCode);
-				StateCodes2Names.put(stateCode, stateName);
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		if ((NamesOfTerritoriesAndStates.size() != CodesOfTerritoriesAndStates.size())
-				|| (StateNames2Codes.size() != StateCodes2Names.size())
-				|| (NamesOfTerritoriesAndStates.size() != StateCodes2Names.size())) {
-			System.err.println("Error: State data loading.");
-			System.exit(-1);
-		}
-	}
 
 	/**
 	 * BuildUp States and Territories Data Structures
