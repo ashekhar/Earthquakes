@@ -3,6 +3,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 
@@ -54,10 +55,11 @@ public class quakesHelperMethods {
 	 */
 	static void usage(String className, String args0) {
 		
+		System.err.println("Argument entered: " + args0);
 		System.err.println("Usage: java " + className + " --top5 | --statestop5 | --<Name of state | State initials>\n");
 		System.out.println("--top5: A list of the top 5 US states by number of earthquakes, highest to lowest");
 		System.out.println("--statestop5: A list of the top 25 strongest earthquakes in each state of occurence, highest to lowest");
-		System.out.println("--<Name of state | State initials>: A list of the top 25 strongest earthquakes in a specific state, highest to lowest");
+		System.out.println("--<Name of state | State initials>: A list of the top 5 strongest earthquakes in a specific state, highest to lowest");
 		System.out.println("\tEx: --california | --California | --CA | --ca\n");
 		System.out.println("For the following states/territories, please use the state code.");
 		System.out.println("States ...");
@@ -138,6 +140,30 @@ public class quakesHelperMethods {
 	}
 
 	/**
+	 * Check if USGS site is responding.
+	 * 
+	 * @param urlStr
+	 * @return
+	 */
+	private static boolean isUSGSSiteResponding(String urlStr) {
+
+	    try {
+	        
+	    	URL url = new URL(urlStr);
+	        URLConnection conn = url.openConnection();
+	        conn.connect();
+	        conn.getInputStream().close();
+	        
+	    } catch (MalformedURLException e) {
+	    	e.printStackTrace();
+	    } catch (IOException e) {
+	        return false;
+	    }
+		
+	    return true;
+	}
+	
+	/**
 	 * Fetch the earthquake data by making the API call.
 	 * 
 	 * @param urlStr
@@ -145,6 +171,11 @@ public class quakesHelperMethods {
 	 */
 	public static String getEarthquakesDataFromUSGS(String urlStr) {
 
+		if (!isUSGSSiteResponding("https://earthquake.usgs.gov")) {
+			System.err.println("Error: USGS website not responding.");
+			System.exit(-1);
+		}
+		
 		System.out.println("Fetching earthquake data from USGS (https://earthquake.usgs.gov) ...");
 		
 		StringBuilder result = new StringBuilder();
@@ -177,6 +208,8 @@ public class quakesHelperMethods {
 					while ((line = rd.readLine()) != null) {
 						result.append(line);
 						lineCounter++;
+						
+						// "." to indicate progress.
 						if (lineCounter % 100 == 0)
 							System.out.print(".");
 					}
