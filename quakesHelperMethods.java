@@ -172,7 +172,7 @@ public class quakesHelperMethods {
 	public static String getEarthquakesDataFromUSGS(String urlStr) {
 
 		if (!isUSGSSiteResponding("https://earthquake.usgs.gov")) {
-			System.err.println("Error: USGS website not responding.");
+			System.err.println("Error: USGS website is not responding/not reachable.");
 			System.exit(-1);
 		}
 		
